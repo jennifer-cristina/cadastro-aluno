@@ -13,18 +13,43 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Color;
 import javax.swing.UIManager;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+
+import br.senai.sp.jandira.model.Aluno;
 import br.senai.sp.jandira.model.Periodo;
+import br.senai.sp.jandira.repository.AlunoRepository;
 
 public class FrameCadastroAlunos extends JFrame {
 
+	
 	private JPanel contentPane;
 	private JTextField txtMatricula;
 	private JTextField txtNome;
+	
+	private int posicao = 0; 
 
 	public FrameCadastroAlunos() {
+		
+//		Vetores (array, coleção)
+		
+//		int[] numeros = new int[5];
+//		numeros[0] = 8;
+//		numeros[1] = 4;
+//		numeros[2] = 48;
+//		numeros[3] = 85;
+//		numeros[4] = 79;
+
+//		String[] diasDaSemana = {"Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta"};
+//		
+//		for (String dia : diasDaSemana) {
+//			System.out.println(dia);
+//		}
+		
 		setTitle("Cadastro de Alunos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 281);
@@ -57,12 +82,19 @@ public class FrameCadastroAlunos extends JFrame {
 		contentPane.add(lblPeriodo);
 		
 		JComboBox comboPeriodo = new JComboBox();
-		comboPeriodo.setModel(new DefaultComboBoxModel(Periodo.values()));
+		DefaultComboBoxModel<String> modelPeriodo = new DefaultComboBoxModel<String>();
+		
+		for (Periodo p : Periodo.values()) {
+			modelPeriodo.addElement(p.getDescricao());
+
+		}
+		
+		comboPeriodo.setModel(modelPeriodo);
 		comboPeriodo.setBounds(76, 107, 86, 22);
 		contentPane.add(comboPeriodo);
 		
 		JButton btnSalvarAluno = new JButton("Salvar Aluno");
-		btnSalvarAluno.setBounds(28, 195, 134, 31);
+		btnSalvarAluno.setBounds(10, 155, 181, 31);
 		contentPane.add(btnSalvarAluno);
 		
 		JLabel lblListaDeAlunos = new JLabel("Lista de Alunos:");
@@ -74,8 +106,57 @@ public class FrameCadastroAlunos extends JFrame {
 		contentPane.add(scrollPane);
 		
 		JList listAlunos = new JList();
+		
+		DefaultListModel<String> listaModel = new DefaultListModel<String>();
+		
+		listAlunos.setModel(listaModel);
+		
 		scrollPane.setViewportView(listAlunos);
 		
-
+		JButton btnMostrarAlunos = new JButton("Exibir Alunos");
+		btnMostrarAlunos.setBounds(10, 197, 181, 31);
+		contentPane.add(btnMostrarAlunos);
+		
+		
+		
+		AlunoRepository turma = new AlunoRepository(3);
+		
+		btnSalvarAluno.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				Aluno aluno = new Aluno();
+				aluno.setMatricula(txtMatricula.getText());
+				aluno.setNome(txtNome.getText());
+				
+				turma.gravar(aluno, posicao);
+				
+				posicao++;
+				
+				// Adicionar o nome do Aluno ao model da lista
+				listaModel.addElement(aluno.getNome());
+				
+			}
+		});
+		
+		btnMostrarAlunos.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				for (Aluno aluno : turma.listarTodos()) {
+					
+					System.out.println(aluno.getMatricula());
+					System.out.println(aluno.getNome());
+					System.out.println("--------------------------------------");
+					
+				}
+				
+				
+			}
+		});
+		
+		
 	}
 }
