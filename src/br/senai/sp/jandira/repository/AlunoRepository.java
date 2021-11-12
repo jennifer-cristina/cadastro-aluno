@@ -4,26 +4,30 @@ import br.senai.sp.jandira.model.Aluno;
 
 public class AlunoRepository {
 	
-	private Aluno[] Turma;
+	private Aluno[] turma;
 	
 	public AlunoRepository() {
-		Turma = new Aluno[32];
+		turma = new Aluno[32];
 	}
 	
 	public AlunoRepository(int quantidadeAlunos) {
-		Turma = new Aluno[quantidadeAlunos];
+		turma = new Aluno[quantidadeAlunos];
 	}
 	
 	public void gravar(Aluno aluno, int posicao) {
-		Turma[posicao] = aluno;
+		turma[posicao] = aluno;
 	}
 	
 	public Aluno listarAluno(int posicao){
-		return Turma[posicao];
+		return turma[posicao];
 	}
 	
 	public Aluno[] listarTodos(){
-		return Turma;
+		return turma;
+	}
+	
+	public int getTamanho() {
+		return turma.length;
 	}
 
 }
